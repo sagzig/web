@@ -28,8 +28,9 @@ export interface BountyContribution {
 export interface Bounty {
   id: number;
   amount: string;
-  status: 'OPEN' | 'CLOSED';
+  status: 'OPEN' | 'CLOSED' | 'CANCELLED' | 'EXPIRED' | 'REVIEW_PERIOD';
   expirationDate?: string;
+  gracePeriodDays?: number;
   bountyType: BountyType;
   createdBy: User;
   solutions: BountySolution[];
@@ -196,6 +197,7 @@ export const transformBounty = (raw: any, options?: { ignoreBaseAmount?: boolean
       amount: raw.amount || '0',
       status: raw.status || 'OPEN',
       expirationDate: raw.expiration_date || new Date().toISOString(),
+      gracePeriodDays: raw.grace_period_days,
       bountyType: raw.bounty_type || 'BOUNTY',
       createdBy: transformUser(raw.created_by),
       solutions: Array.isArray(raw.solutions) ? raw.solutions.map(transformSolution) : [],
@@ -211,6 +213,7 @@ export const transformBounty = (raw: any, options?: { ignoreBaseAmount?: boolean
       amount: raw?.amount || '0',
       status: raw?.status || 'OPEN',
       expirationDate: raw?.expiration_date || new Date().toISOString(),
+      gracePeriodDays: raw?.grace_period_days,
       bountyType: raw?.bounty_type || 'BOUNTY',
       createdBy: transformUser(null),
       solutions: [],
